@@ -5,6 +5,18 @@ import 'package:provider/provider.dart';
 
 import 'app/app.dart';
 
+//things that could be done better if more tine was provided
+
+/*
+proper commenting isn't done
+provider could be used on the tabsview page
+Imagepicker cane be used to pick camera images
+This branch might have some errors but is properly structured
+test cases could be written
+structure could be btter
+push notifications could be better implemented
+*/
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
