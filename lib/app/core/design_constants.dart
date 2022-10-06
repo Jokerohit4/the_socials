@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class DSColors {
   // accent colors
   static const Color secondary = Color(0xff005CAA);
-  static const Color secondaryLight = Color(0xff328EDC);
-  static const Color secondaryDark = Color(0xff003482);
+  static const Color secondaryLight = Color(0xffCFC1A7);
+  static const Color secondaryDark = Color(0xff1d1d1d);
   static const LinearGradient secondaryGradient = LinearGradient(
     begin: Alignment.topRight,
     end: Alignment.bottomLeft,

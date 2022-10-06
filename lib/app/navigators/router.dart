@@ -4,10 +4,6 @@ import 'package:the_socials/app/app.dart';
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case RoutePaths.splash:
-        return MaterialPageRoute(
-          builder: (_) => const SplashView(),
-        );
       case RoutePaths.login:
         return MaterialPageRoute(
           builder: (_) => LoginView(),
@@ -20,9 +16,12 @@ class MyRouter {
         return MaterialPageRoute(
           builder: (_) => FriendListView(),
         );
+      case RoutePaths.tabs:
+        return MaterialPageRoute(
+          builder: (_) => const TabsView(),
+        );
     }
     return MaterialPageRoute(
-      // builder: (_) => PageNotFound(),
       builder: (_) => const Text(
         'Replace with page not found',
       ),

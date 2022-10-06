@@ -1,52 +1,54 @@
 import 'package:flutter/material.dart';
 
-import '../app.dart';
-
 class MessageWidget extends StatelessWidget {
-  final Message message;
-  final bool isMe;
-
+  final String chatRoomId;
+  final TextEditingController controller;
+  final onSendMessage;
   const MessageWidget({
-    required this.message,
-    required this.isMe,
-  });
+    Key? key,
+    required this.chatRoomId,
+    required this.controller,
+    required this.onSendMessage,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final radius = const Radius.circular(12);
-    final borderRadius = BorderRadius.all(radius);
+    final size = MediaQuery.of(context).size;
 
-    return Row(
-      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: <Widget>[
-        if (!isMe)
-          CircleAvatar(
-              radius: 16, backgroundImage: NetworkImage(message.urlAvatar)),
-        Container(
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.all(16),
-          constraints: const BoxConstraints(maxWidth: 140),
-          decoration: BoxDecoration(
-            color: isMe ? Colors.grey[100] : Theme.of(context).accentColor,
-            borderRadius: isMe
-                ? borderRadius.subtract(BorderRadius.only(bottomRight: radius))
-                : borderRadius.subtract(BorderRadius.only(bottomLeft: radius)),
-          ),
-          child: buildMessage(),
+    return Container(
+      height: size.height / 10,
+      width: size.width,
+      alignment: Alignment.center,
+      child: SizedBox(
+        height: size.height / 12,
+        width: size.width / 1.1,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: size.height / 17,
+              width: size.width / 1.3,
+              child: TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.photo),
+                    ),
+                    hintText: "Send Message",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    )),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: IconButton(
+                  icon: const Icon(Icons.send), onPressed: () => onSendMessage),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
-
-  Widget buildMessage() => Column(
-        crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            message.message,
-            style: TextStyle(color: isMe ? Colors.black : Colors.white),
-            textAlign: isMe ? TextAlign.end : TextAlign.start,
-          ),
-        ],
-      );
 }

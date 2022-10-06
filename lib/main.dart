@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,8 +8,6 @@ import 'app/app.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // final cameras = await availableCameras();
-  //final frontCamera = cameras[1];
   runApp(const MyApp());
 }
 
@@ -28,17 +27,36 @@ class _MyAppState extends State<MyApp> {
     super.didChangeDependencies();
   }
 
+  bool _isSignedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserLoggedInStatus();
+  }
+
+  getUserLoggedInStatus() async {
+    await HelperFunctions.getUserLoggedInStatus().then((value) {
+      setState(() {
+        _isSignedIn = value!;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: providers,
+      providers: [
+        StreamProvider.value(
+          value: FirebaseAuth.instance.authStateChanges(),
+          initialData: FirebaseAuth.instance.authStateChanges(),
+        ),
+      ],
       child: MaterialApp(
-        title: 'the_socials',
-        home: LoginView(),
-        initialRoute: RoutePaths.login,
+        title: appTitle,
+        home: _isSignedIn ? const TabsView() : LoginView(),
         onGenerateRoute: MyRouter.generateRoute,
         theme: ThemeData(
-          primarySwatch: Colors.red,
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: {
               TargetPlatform.android: CupertinoPageTransitionsBuilder(),

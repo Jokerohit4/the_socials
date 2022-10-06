@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../api/api.dart';
 import '../../app.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -7,8 +8,12 @@ class LoginViewModel extends ChangeNotifier {
     await Authentication().signInWithGoogle();
   }
 
+  Future<void> addUser() async {
+    await FireStoreApi().addUser();
+  }
+
   onPressGoogle(context) {
-    signInWithGoogle();
-    Navigator.pushNamed(context, RoutePaths.home);
+    signInWithGoogle().whenComplete(() => addUser()
+        .whenComplete(() => Navigator.pushNamed(context, RoutePaths.tabs)));
   }
 }

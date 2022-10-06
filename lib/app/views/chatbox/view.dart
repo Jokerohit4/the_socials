@@ -1,47 +1,47 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../app.dart';
 
-class ChatBoxView extends StatefulWidget {
-  final User user;
+class ChatBoxView extends StatelessWidget {
+  final String name;
+  final String chatRoomId;
+  final User? user;
+  ChatBoxView(
+      {Key? key,
+      required this.chatRoomId,
+      required this.name,
+      required this.user})
+      : super(key: key);
 
-  const ChatBoxView({
-    required this.user,
-    Key? key,
-  }) : super(key: key);
-
+  final ChatBoxViewModel _viewModel = ChatBoxViewModel();
+  final TextEditingController _message = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
-  _ChatBoxViewState createState() => _ChatBoxViewState();
-}
-
-class _ChatBoxViewState extends State<ChatBoxView> {
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        extendBodyBehindAppBar: true,
-        backgroundColor: Colors.blue,
-        body: SafeArea(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: Text(name),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              ProfileHeaderWidget(
-                  name: FirebaseAuth.instance.currentUser!.displayName!),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25),
-                    ),
-                  ),
-                  child: MessagesWidget(
-                      idUser: FirebaseAuth.instance.currentUser!.uid),
-                ),
+              ChatBodyWidget(
+                chatRoomId: chatRoomId,
+                firestore: _firestore,
               ),
-              NewMessageWidget(idUser: FirebaseAuth.instance.currentUser!.uid)
+              MessageWidget(
+                chatRoomId: chatRoomId,
+                controller: _message,
+                onSendMessage:
+                    _viewModel.onSendMessage(chatRoomId, _message, _firestore),
+              ),
             ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }
